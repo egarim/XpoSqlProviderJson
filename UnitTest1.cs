@@ -38,6 +38,9 @@ namespace XpoSqlProviderJson
             }
             CreateTestData();
 
+            CriteriaOperator.RegisterCustomFunction(new JsonSimpleEqual());
+            CriteriaOperator.RegisterCustomFunction(new JsonValue());
+            CriteriaOperator.RegisterCustomFunction(new JsonQuery());
         }
 
         private void CreateTestData()
@@ -54,6 +57,10 @@ namespace XpoSqlProviderJson
                 Address=new AddressInfo("USA","Arizona","Arizona Street")
             };
 
+
+            LookupInfo Countries = new LookupInfo("EL Salvador", "El Salvador", "Cuba", "Republica dominicana", "Chile", "Argentina", "Colombia");
+            LookupInfo Languages = new LookupInfo("ES", "ES", "RU", "EN", "IT", "FR", "PT");
+
             UnitOfWork unitOfWork = new UnitOfWork(this.dl);
 
 
@@ -65,6 +72,11 @@ namespace XpoSqlProviderJson
 
             JsonStorage Joche = new JsonStorage(unitOfWork) { Id = "1", JsonData = JsonConvert.SerializeObject(JocheInfo, Formatting.Indented) };
             JsonStorage Javier = new JsonStorage(unitOfWork) { Id = "2", JsonData = JsonConvert.SerializeObject(JavierInfo, Formatting.Indented) };
+
+            JsonStorage CountriesLookup = new JsonStorage(unitOfWork) { Id = "3", JsonData = JsonConvert.SerializeObject(Countries, Formatting.Indented) };
+            JsonStorage LanguageLookup = new JsonStorage(unitOfWork) { Id = "4", JsonData = JsonConvert.SerializeObject(Languages, Formatting.Indented) };
+
+
             unitOfWork.CommitChanges();
         }
 
@@ -72,12 +84,12 @@ namespace XpoSqlProviderJson
         public void SimpleEqualTest()
         {
 
-            CriteriaOperator.RegisterCustomFunction(new JsonSimpleEqual());
+          
 
 
             UnitOfWork unitOfWork = new UnitOfWork(this.dl);
 
-            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonSimpleEqual(JsonData, '$.CountryOfResidence','Russian Federation')");
+            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonSimpleEqual(JsonData, '$.CountryOfResidence','EL Salvador')");
             Debug.WriteLine(criteriaOperator);
             XPCollection<JsonStorage> JsonObjects = new XPCollection<JsonStorage>(PersistentCriteriaEvaluationBehavior.InTransaction, unitOfWork, criteriaOperator);
        
@@ -91,11 +103,59 @@ namespace XpoSqlProviderJson
 
             Assert.AreEqual(1, JsonObjects.Count);
         }
+
+
+        [Test]
+        public void JsonValueTest()
+        {
+
+          
+
+
+            UnitOfWork unitOfWork = new UnitOfWork(this.dl);
+
+            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonValue(JsonData, '$.CountryOfResidence') = 'Russian Federation'");
+            Debug.WriteLine(criteriaOperator);
+            XPCollection<JsonStorage> JsonObjects = new XPCollection<JsonStorage>(PersistentCriteriaEvaluationBehavior.InTransaction, unitOfWork, criteriaOperator);
+
+
+
+
+            foreach (JsonStorage jsonStorage in JsonObjects)
+            {
+                Debug.WriteLine($"{jsonStorage.Id} - {jsonStorage.JsonData}");
+            }
+
+            Assert.AreEqual(1, JsonObjects.Count);
+        }
+        [Test]
+        public void JsonValueNestedObjectTest()
+        {
+
+
+
+
+            UnitOfWork unitOfWork = new UnitOfWork(this.dl);
+
+            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonValue(JsonData, '$.Address.State') = 'Arizona'");
+            Debug.WriteLine(criteriaOperator);
+            XPCollection<JsonStorage> JsonObjects = new XPCollection<JsonStorage>(PersistentCriteriaEvaluationBehavior.InTransaction, unitOfWork, criteriaOperator);
+
+
+
+
+            foreach (JsonStorage jsonStorage in JsonObjects)
+            {
+                Debug.WriteLine($"{jsonStorage.Id} - {jsonStorage.JsonData}");
+            }
+
+            Assert.AreEqual(1, JsonObjects.Count);
+        }
         [Test]
         public void SimpleEqualNestedObjectTest()
         {
 
-            CriteriaOperator.RegisterCustomFunction(new JsonSimpleEqual());
+        
 
 
             UnitOfWork unitOfWork = new UnitOfWork(this.dl);
@@ -113,6 +173,36 @@ namespace XpoSqlProviderJson
             }
 
             Assert.AreEqual(1, JsonObjects.Count);
+        }
+        [Test]
+        public void JsonQuery()
+        {
+
+            //HACK https://docs.devexpress.com/XPO/5206/examples/how-to-implement-a-custom-criteria-language-function-operator
+
+
+            UnitOfWork unitOfWork = new UnitOfWork(this.dl);
+
+            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonSimpleEqual(JsonData, '$.SelectedValue','El Salvador')");
+            Debug.WriteLine(criteriaOperator);
+           
+
+
+            XPView view = new XPView(unitOfWork, typeof(JsonStorage), "Id", criteriaOperator);
+            // Using MyGetMonth in an XPView column's expression.
+            view.AddProperty("Values", "JsonQuery(JsonData,'$.Values')");
+
+            foreach (ViewRecord prop in view)
+            {
+                Debug.WriteLine(prop["Id"]);
+                Debug.WriteLine("Values: " + prop["Values"]);
+            }
+
+
+
+
+          
+            //Assert.AreEqual(1, JsonObjects.Count);
         }
     }
 }

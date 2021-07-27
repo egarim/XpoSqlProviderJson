@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpoSqlProviderJson", "XpoSqlProviderJson.csproj", "{BA410323-EAEA-4FEC-80F1-51AD6E83C329}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XpoSqlProviderJson", "XpoSqlProviderJson.csproj", "{BA410323-EAEA-4FEC-80F1-51AD6E83C329}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
