@@ -179,7 +179,7 @@ namespace XpoSqlProviderJson
         {
 
             //HACK https://docs.devexpress.com/XPO/5206/examples/how-to-implement-a-custom-criteria-language-function-operator
-
+            //HACK https://docs.microsoft.com/en-us/sql/t-sql/functions/json-query-transact-sql?view=sql-server-ver15
 
             UnitOfWork unitOfWork = new UnitOfWork(this.dl);
 
