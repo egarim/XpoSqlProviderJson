@@ -40,7 +40,8 @@ namespace XpoSqlProviderJson
         {
             if (column.Name== "JsonData")
             {
-                return $"nvarchar(max) CONSTRAINT [Content should be formatted as JSON] CHECK ( ISJSON({column.Name})>0 )";
+                string Value = $"nvarchar(max) CONSTRAINT [Content should be formatted as JSON] CHECK ( ISJSON({column.Name})>0 )";
+                return Value;
             }
 
             return base.GetSqlCreateColumnTypeForString(table, column);

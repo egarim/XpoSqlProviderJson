@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace XpoSqlProviderJson
 {
-    public class Person : XPObject
+    public class JsonStorage : XPObject
     {
-        public Person(Session session) : base(session)
+        public JsonStorage(Session session) : base(session)
         { }
 
 
 
+        string id;
         string jsonData;
-        string name;
 
+
+
+        
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
-        public string Name
+        public string Id
         {
-            get => name;
-            set => SetPropertyValue(nameof(Name), ref name, value);
+            get => id;
+            set => SetPropertyValue(nameof(Id), ref id, value);
         }
 
         //[DbType("json")]
