@@ -1,14 +1,11 @@
 ﻿using DevExpress.Data.Filtering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XpoSqlProviderJson
 {
     //HACK https://docs.devexpress.com/XPO/3246/examples/how-to-implement-a-full-text-search
-    public class JsonSimpleEqual : ICustomFunctionOperatorFormattable
+    public class JsonValue : ICustomFunctionOperatorFormattable
     {
         #region ICustomFunctionOperator Members
         // Evaluates the function on the client
@@ -19,7 +16,7 @@ namespace XpoSqlProviderJson
         }
         public string Name
         {
-            get { return nameof(JsonSimpleEqual); }
+            get { return nameof(JsonValue); }
         }
         public Type ResultType(params Type[] operands)
         {
@@ -33,9 +30,9 @@ namespace XpoSqlProviderJson
             // This example implements the function for MsSqlJson databases only
             if (providerType == typeof(MsSqlJson))
             {
-                return $"JSON_VALUE({operands[0]}, {operands[1]}) = {operands[2]}";
+                return $"JSON_VALUE({operands[0]}, {operands[1]})";
             }
-                //return string.Format("JSON_VALUE({0}, {1}) ", operands[0], operands[1]);
+            //return string.Format("JSON_VALUE({0}, {1}) ", operands[0], operands[1]);
 
             throw new NotSupportedException(string.Concat("This provider is not supported: ",
                 providerType.Name));

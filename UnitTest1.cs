@@ -15,7 +15,7 @@ namespace XpoSqlProviderJson
         public void Setup()
         {
             //Hack https://docs.microsoft.com/en-us/sql/relational-databases/json/store-json-documents-in-sql-tables?view=sql-server-ver15
-
+            https://docs.microsoft.com/en-us/sql/relational-databases/json/json-data-sql-server?view=sql-server-ver15
             //XpoProvider=MsSqlJson;Data Source=(local);User ID=username;Password=password;Initial Catalog=database;Persist Security Info=true
             MsSqlJson.Register();
 
@@ -89,7 +89,7 @@ namespace XpoSqlProviderJson
 
             UnitOfWork unitOfWork = new UnitOfWork(this.dl);
 
-            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonSimpleEqual(JsonData, '$.CountryOfResidence','EL Salvador')");
+            CriteriaOperator criteriaOperator = CriteriaOperator.Parse("JsonSimpleEqual(JsonData, '$.CountryOfResidence','USA')");
             Debug.WriteLine(criteriaOperator);
             XPCollection<JsonStorage> JsonObjects = new XPCollection<JsonStorage>(PersistentCriteriaEvaluationBehavior.InTransaction, unitOfWork, criteriaOperator);
        
